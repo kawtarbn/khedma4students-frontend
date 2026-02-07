@@ -9,6 +9,7 @@ import Footer from "../components/Footer";
 import { studentAPI } from "../services/api";
 
 import { validateStudentForm } from "../utils/validateStudent";
+import { clearStudentStorage, getStudentInfo } from "../utils/clearStorage";
 
 
 
@@ -26,7 +27,8 @@ export default function Login() {
 
     setError("");
 
-
+    // Clear any old storage first
+    clearStudentStorage();
 
     const form = e.target;
 
@@ -56,13 +58,18 @@ export default function Login() {
 
       const student = res.data.student;
 
-
+      console.log("=== LOGIN SUCCESS DEBUG ===");
+      console.log("Logged in student:", student);
+      console.log("Student ID:", student.id);
+      console.log("Student Name:", student.full_name);
 
       localStorage.setItem("role", "student");
-
       localStorage.setItem("studentId", student.id);
-
       localStorage.setItem("full_name", student.full_name);
+      
+      // Verify storage was set correctly
+      console.log("Storage set - Student ID:", localStorage.getItem("studentId"));
+      console.log("Storage set - Full Name:", localStorage.getItem("full_name"));
 
       window.dispatchEvent(new Event("auth-change"));
 
