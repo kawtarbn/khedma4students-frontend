@@ -4,6 +4,11 @@ import "./App.css";
 
 import "./styles/responsive.css";
 
+import { autoClearCache } from "./utils/clearAllCache";
+
+// Auto-clear cache on app load
+autoClearCache();
+
 
 
 /* Public pages */
