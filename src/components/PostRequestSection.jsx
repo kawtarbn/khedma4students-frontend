@@ -55,10 +55,10 @@ const PostRequestSection = () => {
         description: form.description,
         category: form.category,
         city: form.city,
-        pay: form.pay.replace(/[^0-9]/g, ''), // Extract only numbers from pay field
+        pay: form.pay ? parseInt(form.pay.replace(/[^0-9]/g, '')) : 0, // Convert to number, default to 0 if empty
         availability: form.availability,
-        contact_email: form.contactEmail, // Backend might expect snake_case
-        contact_phone: form.contactPhone, // Backend might expect snake_case
+        contactEmail: form.contactEmail, // Use camelCase to match backend
+        contactPhone: form.contactPhone, // Use camelCase to match backend
         student_id: studentId,
         status: form.status
       };
