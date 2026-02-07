@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { loginEmployer } from "../api";
-import { validateEmployerForm, validateEmployerProfileForm } from "../utils/validateStudent";
+import { validateEmployerForm } from "../utils/validateStudent";
 
 
 export default function Emplogin() {

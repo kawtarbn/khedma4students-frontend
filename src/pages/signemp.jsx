@@ -4,7 +4,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { createEmployer } from "../api";
 import algerianCities from "../data/algerianCities";
-import { validateEmployerForm, validateEmployerProfileForm } from "../utils/validateStudent";
+import { validateEmployerForm } from "../utils/validateStudent";
 
 export default function SignEmp() {
   const [error, setError] = useState("");

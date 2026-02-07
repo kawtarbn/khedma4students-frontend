@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ApplyModal from "../components/ApplyModal";
-import { getStudentById, getStudentApplications, getStudentServiceApplications, deleteStudent, deleteRequest } from "../api";
+import { getStudentById, getStudentApplications, getStudentServiceApplications, deleteStudent } from "../api";
 
 export default function Stdashboard2() {
   const navigate = useNavigate();
@@ -15,7 +15,6 @@ export default function Stdashboard2() {
 
   // Modal state
   const [openApplyModal, setOpenApplyModal] = useState(false);
-  const [selectedJob, setSelectedJob] = useState(null); // optional job info
 
   useEffect(() => {
     async function fetchData() {

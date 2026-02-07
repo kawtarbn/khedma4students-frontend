@@ -63,7 +63,7 @@ export const validateStudentForm = ({ full_name, email, password, university, ci
 
 export const validateStudentProfileForm = (form) => {
   const errors = [];
-  const isEmail = (email) => /^([a-zA-Z0-9_.\-]+)@([a-zA-Z0-9_.\-]+)\.([a-zA-Z]{2,})$/.test(email);
+  const isEmail = (email) => /^([a-zA-Z0-9_.-]+)@([a-zA-Z0-9_.-]+)\.([a-zA-Z]{2,})$/.test(email);
 
   if (!form.full_name?.trim()) errors.push("Full name cannot be empty.");
   if (!form.email?.trim()) errors.push("Email cannot be empty.");
