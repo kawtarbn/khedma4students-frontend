@@ -128,6 +128,6 @@ export const contactAPI = {
 };
 
 // Health check
-export const healthCheck = () => api.get('/ping', { baseURL: 'http://localhost:8000' });
+export const healthCheck = () => api.get('/ping');
 
 export default api;
