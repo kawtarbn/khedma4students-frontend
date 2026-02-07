@@ -7,19 +7,22 @@ const SuccessStories = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (loading) {
-      reviewAPI.getAll()
-        .then(res => {
-          console.log('Reviews API response:', res.data);
-          setStories(res.data);
-          setLoading(false);
-        })
-        .catch(err => {
-          console.error('Error fetching reviews:', err);
-          setLoading(false);
-        });
-    }
-  }, [loading]);
+    reviewAPI.getAll()
+      .then(res => {
+        console.log('Reviews API response:', res.data);
+        const reviewsData = res.data || [];
+        console.log('Processed reviews data:', reviewsData);
+        console.log('Is array?', Array.isArray(reviewsData));
+        console.log('Array length:', reviewsData.length);
+        setStories(reviewsData);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching reviews:', err);
+        setStories([]); // Set empty array on error
+        setLoading(false);
+      });
+  }, []); // Empty dependency array - run only once on mount
 
   // Hide a card locally (temporary)
   const handleHide = (id) => {
@@ -41,7 +44,7 @@ const SuccessStories = () => {
       background: "#f8f9fa"
     }}>
       {/* Only show section if there are stories */}
-      {stories.length > 0 && (
+      {Array.isArray(stories) && stories.length > 0 && (
         <>
           <h2 style={{ 
             textAlign: "center", 
@@ -219,7 +222,7 @@ const SuccessStories = () => {
       )}
       
       {/* Show nothing when no reviews exist */}
-      {stories.length === 0 && !loading && (
+      {(!Array.isArray(stories) || stories.length === 0) && !loading && (
         <div style={{
           textAlign: "center",
           padding: "60px 20px",
