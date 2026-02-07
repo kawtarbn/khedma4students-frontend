@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = 'https://khedma4students-backend.com/api';
+const API_URL = 'https://khedma4students-backend.onrender.com/api';
 
 // ------------------- STUDENTS -------------------
 export const getStudents = () => axios.get(`${API_URL}/students`);
