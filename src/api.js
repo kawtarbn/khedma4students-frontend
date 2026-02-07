@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = 'https://khedma4students-backend.up.railway.app/api';
+const API_URL = 'https://khedma4students-backend.herokuapp.com/api';
 
 // ------------------- STUDENTS -------------------
 export const getStudents = () => axios.get(`${API_URL}/students`);
