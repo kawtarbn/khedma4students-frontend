@@ -32,66 +32,82 @@ export default function Stdashboard1() {
 
   useEffect(() => {
     async function fetchData() {
+      if (!studentId) {
+        console.error("No student ID found");
+        setLoading(false);
+        return;
+      }
+
       try {
-        // Fetch student info
-        const studentRes = await getStudentById(studentId);
-        setStudent(studentRes.data);
-
-        // Fetch student services
-        const servicesRes = await getStudentServices(studentId);
-        setServices(Array.isArray(servicesRes.data.data) ? servicesRes.data.data : []);
-
-        // Fetch student applications
-        const appsRes = await getStudentApplications(studentId);
-        console.log("=== STUDENT APPLICATIONS DEBUG ===");
-        console.log("Student applications response:", appsRes);
-        console.log("Applications data type:", typeof appsRes.data);
-        console.log("Applications data:", appsRes.data);
-        console.log("Is array:", Array.isArray(appsRes.data));
-        console.log("Applications length:", appsRes.data?.length || 0);
-        console.log("Direct data check:", appsRes.data);
+        console.log("=== STUDENT DASHBOARD FETCH START ===");
         
-        // Try to access the data property directly
-        const applicationsData = appsRes.data?.data || [];
-        console.log("Applications data from direct access:", applicationsData);
-        console.log("Applications length from direct access:", applicationsData.length);
-        
-        setApplications(applicationsData);
+        // Create timeout promise
+        const timeout = (ms) => new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Request timeout')), ms)
+        );
 
-        // Fetch student hiring requests - BULLETPROOF VERSION
-        try {
-          const hiringRes = await getStudentHiringRequests(studentId);
-          console.log("=== STUDENT HIRING REQUESTS DEBUG ===");
-          console.log("API Response:", hiringRes);
-          console.log("Data length:", hiringRes.data?.data?.length || 0);
-          
-          // Multiple fallback strategies
+        // Fetch all data in parallel with timeout
+        const [studentRes, servicesRes, appsRes, hiringRes] = await Promise.allSettled([
+          Promise.race([getStudentById(studentId), timeout(5000)]),
+          Promise.race([getStudentServices(studentId), timeout(5000)]),
+          Promise.race([getStudentApplications(studentId), timeout(5000)]),
+          Promise.race([getStudentHiringRequests(studentId), timeout(5000)])
+        ]);
+
+        console.log("=== PARALLEL FETCH RESULTS ===");
+
+        // Handle student data
+        if (studentRes.status === 'fulfilled') {
+          setStudent(studentRes.value.data);
+          console.log("✅ Student data loaded");
+        } else {
+          console.error("❌ Student data failed:", studentRes.reason);
+        }
+
+        // Handle services data
+        if (servicesRes.status === 'fulfilled') {
+          const servicesData = Array.isArray(servicesRes.value.data?.data) 
+            ? servicesRes.value.data.data 
+            : [];
+          setServices(servicesData);
+          console.log("✅ Services data loaded:", servicesData.length);
+        } else {
+          console.error("❌ Services data failed:", servicesRes.reason);
+          setServices([]);
+        }
+
+        // Handle applications data
+        if (appsRes.status === 'fulfilled') {
+          const applicationsData = appsRes.value.data?.data || [];
+          setApplications(applicationsData);
+          console.log("✅ Applications data loaded:", applicationsData.length);
+        } else {
+          console.error("❌ Applications data failed:", appsRes.reason);
+          setApplications([]);
+        }
+
+        // Handle hiring requests data
+        if (hiringRes.status === 'fulfilled') {
           let hiringData = [];
           
-          // Strategy 1: Try standard format
-          if (hiringRes.data?.data && Array.isArray(hiringRes.data.data)) {
-            hiringData = hiringRes.data.data;
-          }
-          // Strategy 2: Try direct data array
-          else if (hiringRes.data && Array.isArray(hiringRes.data)) {
-            hiringData = hiringRes.data;
-          }
-          // Strategy 3: Try response.data directly
-          else if (Array.isArray(hiringRes)) {
-            hiringData = hiringRes;
+          if (hiringRes.value.data?.data && Array.isArray(hiringRes.value.data.data)) {
+            hiringData = hiringRes.value.data.data;
+          } else if (hiringRes.value.data && Array.isArray(hiringRes.value.data)) {
+            hiringData = hiringRes.value.data;
           }
           
-          console.log("Final hiring data:", hiringData);
-          console.log("Final hiring count:", hiringData.length);
           setHiringRequests(hiringData);
-        } catch (error) {
-          console.error("Hiring requests fetch failed:", error);
-          setHiringRequests([]); // Always set to array to prevent crashes
+          console.log("✅ Hiring requests loaded:", hiringData.length);
+        } else {
+          console.error("❌ Hiring requests failed:", hiringRes.reason);
+          setHiringRequests([]);
         }
+
       } catch (err) {
-        console.error(err);
+        console.error("=== DASHBOARD FETCH ERROR ===", err);
       } finally {
         setLoading(false);
+        console.log("=== DASHBOARD LOADING COMPLETE ===");
       }
     }
 
@@ -158,7 +174,28 @@ export default function Stdashboard1() {
     return (
       <>
         <Header />
-        <div className="hh22">Loading dashboard...</div>
+        <div className="hh22" style={{ 
+          textAlign: 'center', 
+          padding: '50px',
+          fontSize: '18px',
+          color: '#3B4A69'
+        }}>
+          <div style={{ marginBottom: '20px' }}>
+            <div style={{ 
+              width: '40px', 
+              height: '40px', 
+              border: '4px solid #f3f3f3', 
+              borderTop: '4px solid #163ba7', 
+              borderRadius: '50%', 
+              animation: 'spin 1s linear infinite',
+              margin: '0 auto 20px'
+            }}></div>
+          </div>
+          Loading your dashboard...
+          <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '10px' }}>
+            Fetching your profile, services, and applications
+          </div>
+        </div>
         <Footer />
       </>
     );
