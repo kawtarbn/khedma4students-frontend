@@ -51,9 +51,16 @@ const PostRequestSection = () => {
       }
 
       const requestData = {
-        ...form,
-        student_id: studentId,
+        title: form.title,
+        description: form.description,
+        category: form.category,
+        city: form.city,
         pay: form.pay.replace(/[^0-9]/g, ''), // Extract only numbers from pay field
+        availability: form.availability,
+        contact_email: form.contactEmail, // Backend might expect snake_case
+        contact_phone: form.contactPhone, // Backend might expect snake_case
+        student_id: studentId,
+        status: form.status
       };
 
       console.log("=== POST REQUEST DEBUG ===");
@@ -89,7 +96,10 @@ const PostRequestSection = () => {
       console.error("Error response:", err.response);
       console.error("Error status:", err.response?.status);
       console.error("Error data:", err.response?.data);
-      alert("Failed to post request");
+      
+      // Show more specific error message
+      const errorMessage = err.response?.data?.message || err.response?.data?.error || "Failed to post request";
+      alert(`Error: ${errorMessage}`);
     }
   };
 
