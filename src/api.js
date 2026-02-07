@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = 'https://khedma4students-backend.ondigitalocean.app/api';
+const API_URL = 'https://khedma4students-backend.up.railway.app/api';
 
 // ------------------- STUDENTS -------------------
 export const getStudents = () => axios.get(`${API_URL}/students`);
