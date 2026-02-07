@@ -62,6 +62,12 @@ export default function Stdashboard1() {
           console.log("✅ Student data loaded");
         } else {
           console.error("❌ Student data failed:", studentRes.reason);
+          // Create a minimal student object to prevent dashboard from breaking
+          setStudent({ 
+            id: studentId, 
+            name: 'Student', 
+            email: 'student@example.com' 
+          });
         }
 
         // Handle services data
@@ -170,7 +176,7 @@ export default function Stdashboard1() {
     }
   };
 
-  if (loading || !student) {
+  if (loading) {
     return (
       <>
         <Header />
@@ -194,6 +200,57 @@ export default function Stdashboard1() {
           Loading your dashboard...
           <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '10px' }}>
             Fetching your profile, services, and applications
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  // Check if student profile failed to load
+  if (student && student.id === studentId && student.name === 'Student') {
+    return (
+      <>
+        <Header />
+        <div className="hh22" style={{ 
+          textAlign: 'center', 
+          padding: '50px',
+          fontSize: '18px',
+          color: '#3B4A69'
+        }}>
+          <div style={{ marginBottom: '20px', fontSize: '24px' }}>⚠️</div>
+          <h3>Profile Not Found</h3>
+          <p style={{ color: '#6b7280', marginTop: '10px' }}>
+            We couldn't find your profile in the system. Your student ID ({studentId}) may not exist in our database.
+          </p>
+          <div style={{ marginTop: '20px' }}>
+            <button 
+              onClick={() => navigate('/login')}
+              style={{
+                backgroundColor: '#163ba7',
+                color: 'white',
+                padding: '10px 20px',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                marginRight: '10px'
+              }}
+            >
+              Try Login Again
+            </button>
+            <button 
+              onClick={() => window.location.reload()}
+              style={{
+                backgroundColor: '#6b7280',
+                color: 'white',
+                padding: '10px 20px',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              Refresh
+            </button>
           </div>
         </div>
         <Footer />
