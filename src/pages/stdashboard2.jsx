@@ -232,7 +232,7 @@ export default function Stdashboard2() {
       {openApplyModal && (
         <ApplyModal
           onClose={() => setOpenApplyModal(false)}
-          job={selectedJob}
+          job={null}
           onSubmitApplication={handleNewApplication}
         />
       )}
